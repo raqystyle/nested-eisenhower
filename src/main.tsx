@@ -12,6 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Switch>
+        <Route path="/" exact children={<App />} />
         <Route path="/:id" children={<App />} />
       </Switch>
     </Router>

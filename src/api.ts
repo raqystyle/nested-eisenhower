@@ -1,26 +1,47 @@
-import { GroupedTasks, TaskModel } from './model';
-import mock from './__mock';
+import * as storage from './storage';
+import { GroupedTasks, TaskModel, UrgencyLevels } from './model';
 
-const groupByUrgencyLevel = (head: TaskModel): GroupedTasks => {
+export type APIResponse = {rootTask: TaskModel, groupedTasks: GroupedTasks};
+
+const groupByUrgencyLevel = (head: TaskModel): APIResponse => {
   return {
-    delegate: head.subTasks.filter(x => x.urgency === 'delegate'),
-    doFirst: head.subTasks.filter(x => x.urgency === 'doFirst'),
-    dontDo: head.subTasks.filter(x => x.urgency === 'dontDo'),
-    schedule: head.subTasks.filter(x => x.urgency === 'schedule'),
+    rootTask: head,
+    groupedTasks: {
+      delegate: head.subTasks.filter(x => x.urgency === 'delegate'),
+      doFirst: head.subTasks.filter(x => x.urgency === 'doFirst'),
+      dontDo: head.subTasks.filter(x => x.urgency === 'dontDo'),
+      schedule: head.subTasks.filter(x => x.urgency === 'schedule'),
+    }
   }
 }
 
-function dfs(index: number, head: TaskModel): TaskModel | null {
-  if (index === head.id) return head;
-  for (let task of head.subTasks) {
-    let tmp = dfs(index, task);
-    if (tmp) return tmp;
+export const findTaskByIndex = (index: string, head: TaskModel): TaskModel | null => {
+  let Q = [head];
+  while(Q.length) {
+    let top = Q.shift()!;
+    if (top.id === index) return top;
+    for (let child of top.subTasks) {
+      Q.push(child);
+    }
   }
   return null;
 }
 
-export const fetchTasksForParent = (parent: number): GroupedTasks | null => {
-  const headByIndex = dfs(parent, mock);
-  if (!headByIndex) return null;
-  return groupByUrgencyLevel(headByIndex);
+export const fetchTasksForParent = (parent: string): APIResponse | null => {
+  const task = findTaskByIndex(parent, storage.read());
+  if (!task) return null;
+  return groupByUrgencyLevel(task);
+}
+
+export const addTask = (parentTask: TaskModel, title: string, urgency: UrgencyLevels): void => {
+  console.log('API: add task');
+  
+  parentTask.subTasks.push({
+    id: String(Date.now()),
+    title,
+    urgency,
+    done: false,
+    subTasks: [],
+  });
+  storage.persist();
 }
