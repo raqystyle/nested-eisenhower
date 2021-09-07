@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Quadrant from './components/Quadrant';
-import Task from './components/Task';
 import { useParams } from 'react-router-dom';
 import { fetchTasksForParent, APIResponse, addTask } from './api';
 import { GroupedTasks, TaskModel, UrgencyLevels } from './model';
@@ -11,7 +10,6 @@ function App() {
   const [parentTask, setParentTask] = useState<TaskModel | null>(null);
 
   const handleOnTaskAdd = useCallback((urgency: UrgencyLevels) => (taskTitle: string) => {
-    console.log("App: handleOnTaskAdd");
     addTask(parentTask!, taskTitle, urgency);
   }, [parentTask])
 
@@ -32,28 +30,32 @@ function App() {
       {grouped && (
         <>
           <div className="flex-1 flex">
-            <Quadrant label="Do first" urgencyLevel="doFirst" onAddTask={handleOnTaskAdd('doFirst')}>
-              {grouped.doFirst.length ? grouped.doFirst.map(task => {
-                return <Task key={task.id} id={task.id} title={task.title} done={task.done} />
-              }) : <span>Nothing yet</span>}
-            </Quadrant>
-            <Quadrant label="Schedule" urgencyLevel="schedule" onAddTask={handleOnTaskAdd('schedule')}>
-              {grouped.schedule.length ? grouped.schedule.map(task => {
-                return <Task key={task.id} id={task.id} title={task.title} done={task.done} />
-              }) : <span>Nothing yet</span>}
-            </Quadrant>
+            <Quadrant
+              tasks={grouped.doFirst}
+              label="Do first"
+              urgencyLevel="doFirst"
+              onAddTask={handleOnTaskAdd('doFirst')}
+            />
+            <Quadrant
+              tasks={grouped.schedule}
+              label="Schedule"
+              urgencyLevel="schedule"
+              onAddTask={handleOnTaskAdd('schedule')}
+            />
           </div>
           <div className="flex-1 flex">
-            <Quadrant label="Delegate" urgencyLevel="delegate" onAddTask={handleOnTaskAdd('delegate')}>
-              {grouped.delegate.length ? grouped.delegate.map(task => {
-                return <Task key={task.id} id={task.id} title={task.title} done={task.done} />
-              }) : <span>Nothing yet</span>}
-            </Quadrant>
-            <Quadrant label="Don't do" urgencyLevel="dontDo" onAddTask={handleOnTaskAdd('dontDo')}>
-              {grouped.dontDo.length ? grouped.dontDo.map(task => {
-                return <Task key={task.id} id={task.id} title={task.title} done={task.done} />
-              }) : <span>Nothing yet</span>}
-            </Quadrant>
+            <Quadrant
+              tasks={grouped.delegate}
+              label="Delegate"
+              urgencyLevel="delegate"
+              onAddTask={handleOnTaskAdd('delegate')}
+            />
+            <Quadrant
+              tasks={grouped.dontDo}
+              label="Don't do"
+              urgencyLevel="dontDo"
+              onAddTask={handleOnTaskAdd('dontDo')}
+            />
           </div>
         </>
       )}

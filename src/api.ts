@@ -34,8 +34,6 @@ export const fetchTasksForParent = (parent: string): APIResponse | null => {
 }
 
 export const addTask = (parentTask: TaskModel, title: string, urgency: UrgencyLevels): void => {
-  console.log('API: add task');
-  
   parentTask.subTasks.push({
     id: String(Date.now()),
     title,

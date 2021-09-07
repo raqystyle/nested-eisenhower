@@ -20,7 +20,5 @@ export const read = () => {
 
 export const persist = () => {
   if (rootPointer === null) return;
-  console.log('Storage: persist');
-  
   localStorage.setItem('tasks', JSON.stringify(rootPointer));
 }
