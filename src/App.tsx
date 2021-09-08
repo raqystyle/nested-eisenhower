@@ -35,37 +35,40 @@ function App() {
 
   return (
     <>
-      <header className="text-gray-600 p-3 shadow-lg mb-2 font-bold uppercase">
-        Nested Eisenhower: "{parentTask?.title}"
+      <header className="p-3 shadow-lg mb-2">
+        <div className="text-gray-600 font-bold uppercase">Nested Eisenhower</div>
+        <section className="text-gray-400">
+          Start &rarr; Foo &rarr; {parentTask?.title}
+        </section>
       </header>
-          <div className="flex-1 flex">
-            <Quadrant
+      <div className="flex-1 flex">
+        <Quadrant
           tasks={doFirstTasks}
-              label="Do first"
-              urgencyLevel="doFirst"
-              onAddTask={handleOnTaskAdd('doFirst')}
-            />
-            <Quadrant
+          label="Do first"
+          urgencyLevel="doFirst"
+          onAddTask={handleOnTaskAdd('doFirst')}
+        />
+        <Quadrant
           tasks={scheduleTasks}
-              label="Schedule"
-              urgencyLevel="schedule"
-              onAddTask={handleOnTaskAdd('schedule')}
-            />
-          </div>
-          <div className="flex-1 flex">
-            <Quadrant
+          label="Schedule"
+          urgencyLevel="schedule"
+          onAddTask={handleOnTaskAdd('schedule')}
+        />
+      </div>
+      <div className="flex-1 flex">
+        <Quadrant
           tasks={delegateTasks}
-              label="Delegate"
-              urgencyLevel="delegate"
-              onAddTask={handleOnTaskAdd('delegate')}
-            />
-            <Quadrant
+          label="Delegate"
+          urgencyLevel="delegate"
+          onAddTask={handleOnTaskAdd('delegate')}
+        />
+        <Quadrant
           tasks={dontDoTasks}
-              label="Don't do"
-              urgencyLevel="dontDo"
-              onAddTask={handleOnTaskAdd('dontDo')}
-            />
-          </div>
+          label="Don't do"
+          urgencyLevel="dontDo"
+          onAddTask={handleOnTaskAdd('dontDo')}
+        />
+      </div>
     </>
   )
 }
