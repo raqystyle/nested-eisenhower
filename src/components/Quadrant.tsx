@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 import cx from 'classnames';
 import { UrgencyLevels, TaskModel } from '../model';
 import Task from './Task';
+import { useAppState } from '../stateContext';
 
 export const UrgencyLevelsMap: {[P in UrgencyLevels]: string} = {
   doFirst: 'bg-green-50',
@@ -14,12 +15,12 @@ export type QuadrantProps = {
   label: string;
   urgencyLevel: UrgencyLevels;
   tasks: TaskModel[];
-  onAddTask: (title: string) => void;
 };
 
 const Quadrant = (props: QuadrantProps) => {
+  const { dispatch } = useAppState();
   const [inputVal, setInputVal] = useState('');
-  const { urgencyLevel, label, tasks, onAddTask } = props;
+  const { urgencyLevel, label, tasks } = props;
 
   const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setInputVal(e.target.value);
@@ -29,7 +30,7 @@ const Quadrant = (props: QuadrantProps) => {
     const val = inputVal.trim();
     if (val) {
       setInputVal('');
-      onAddTask(val);
+      dispatch({ kind: 'AddTodo', todoText: val });
     }
   };
 

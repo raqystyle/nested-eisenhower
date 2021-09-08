@@ -1,11 +1,11 @@
 import * as storage from './storage';
 import { GroupedTasks, TaskModel, UrgencyLevels } from './model';
 
-export type APIResponse = {rootTask: TaskModel, groupedTasks: GroupedTasks};
+export type APIResponse = {currentTask: TaskModel, groupedTasks: GroupedTasks};
 
 const groupByUrgencyLevel = (head: TaskModel): APIResponse => {
   return {
-    rootTask: head,
+    currentTask: head,
     groupedTasks: {
       delegate: head.subTasks.filter(x => x.urgency === 'delegate'),
       doFirst: head.subTasks.filter(x => x.urgency === 'doFirst'),
