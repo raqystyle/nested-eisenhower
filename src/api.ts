@@ -27,13 +27,13 @@ export const findTaskByIndex = (index: string, head: TaskModel): TaskModel | nul
   return null;
 }
 
-export const fetchTasksForParent = (parent: string): APIResponse | null => {
-  const task = findTaskByIndex(parent, storage.read());
+export const fetchTasksForParent = async (parent: string): Promise<APIResponse | null> => {
+  const task = findTaskByIndex(parent, await storage.read());
   if (!task) return null;
   return groupByUrgencyLevel(task);
 }
 
-export const addTask = (parentTask: TaskModel, title: string, urgency: UrgencyLevels): void => {
+export const addTask = async (parentTask: TaskModel, title: string, urgency: UrgencyLevels): Promise<void> => {
   parentTask.subTasks.push({
     id: String(Date.now()),
     title,

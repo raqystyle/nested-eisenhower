@@ -2,7 +2,7 @@ import { TaskModel } from "./model";
 
 let rootPointer: TaskModel | null = null;
 
-export const read = () => {
+export const read = async () => {
   const raw = localStorage.getItem('tasks');
   if (raw) {
     rootPointer = JSON.parse(raw) as TaskModel;
@@ -18,7 +18,7 @@ export const read = () => {
   return rootPointer;
 }
 
-export const persist = () => {
+export const persist = async () => {
   if (rootPointer === null) return;
   localStorage.setItem('tasks', JSON.stringify(rootPointer));
 }
