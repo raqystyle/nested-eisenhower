@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { findTaskById, groupByUrgencyLevel } from './api';
 import { LoadedState, useAppState } from './stateContext';
 
-const renderTasks = (state: LoadedState) => {
+function renderTasks(state: LoadedState) {
   const grouped = groupByUrgencyLevel(state.currentTask);
   return (
     <>
@@ -43,6 +43,13 @@ function renderBreadcrumbs(state: LoadedState) {
     </section>
   )
 }
+
+/**
+ * This is the place where we can manipulate the data
+ * that was loaded from the storage.
+ * 
+ * At this point the state will be of type LoadedState
+ */
 
 function App() {
   const { id } = useParams<{ id: string }>();

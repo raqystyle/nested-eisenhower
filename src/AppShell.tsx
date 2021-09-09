@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { read, persist } from './storage';
 import { useAppState } from './stateContext';
 
+/**
+ * This in the place where we read from and write to the storage
+ * 
+ * Once the data was read, we mark the state as "loaded"
+ */
+
 export const AppShell: React.FC<{}> = ({ children }) => {
   const { state, dispatch } = useAppState();
   useEffect(() => {

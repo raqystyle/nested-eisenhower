@@ -9,6 +9,10 @@ export const groupByUrgencyLevel = (head: TaskModel): GroupedTasks => {
   };
 }
 
+/**
+ * Because the data is represented as a N-ary tree
+ * it makes sense to use the BFS to look up the node by the id
+ */
 export const findTaskById = (index: string, head: TaskModel): TaskModel | null => {
   let Q = [head];
   while(Q.length) {
