@@ -22,10 +22,6 @@ export const findTaskById = (index: string, head: TaskModel): TaskModel | null =
   return null;
 }
 
-export const fetchRootTaskFromStorage = async (): Promise<TaskModel> => {
-  return storage.read();
-}
-
 export const addSubTask = (
   currentTaskId: string,
   title: string,

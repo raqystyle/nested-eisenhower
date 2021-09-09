@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './main.css'
 import App from './App'
+import { AppShell } from './AppShell'
 import { Provider } from './stateContext';
 import {
   BrowserRouter as Router,
@@ -12,12 +13,14 @@ import {
 ReactDOM.render(
   <React.StrictMode>
     <Provider>
-      <Router>
-        <Switch>
-          <Route path="/" exact children={<App />} />
-          <Route path="/:id" children={<App />} />
-        </Switch>
-      </Router>
+      <AppShell>
+        <Router>
+          <Switch>
+            <Route path="/" exact children={<App />} />
+            <Route path="/:id" children={<App />} />
+          </Switch>
+        </Router>
+      </AppShell>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

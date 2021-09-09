@@ -5,13 +5,14 @@ import * as api from './api';
 type Action
   = { kind: 'ToggleTodo'; todoId: string; }
   | { kind: 'AddTodo'; todoText: string; urgency: UrgencyLevels }
-  | { kind: 'TasksLoaded'; rootTask: TaskModel; }
-  | { kind: 'SetCurrentTaskId'; currentTaskId: string; }
+  | { kind: 'SetRootTask'; rootTask: TaskModel; }
+  | { kind: 'SetCurrentTask'; currentTask: TaskModel; currentTaskId: string; }
 
-export type LoadingState = { phase: 'loading', currentTaskId?: string; }
+export type LoadingState = { phase: 'loading' }
 export type LoadedState = {
   phase: 'loaded';
   rootTask: TaskModel;
+  currentTask: TaskModel;
   currentTaskId: string;
 };
 
@@ -22,23 +23,18 @@ const init: AppState = {
 }
 
 function reducer(state: AppState, action: Action): AppState {
+  console.log(action);
   switch(action.kind) {
-    case 'SetCurrentTaskId': {
-      return {
-        ...state,
-        currentTaskId: action.currentTaskId
-      }
-    }
-    case 'TasksLoaded': {
+    case 'SetRootTask': {
       return {
         phase: 'loaded',
-        currentTaskId: state.currentTaskId || 'root',
-        rootTask: action.rootTask
+        rootTask: action.rootTask,
+        currentTask: action.rootTask,
+        currentTaskId: 'root'
       }
     }
     case 'AddTodo': {
       if (state.phase === 'loaded') {
-        if (!state.currentTaskId) return state;
         return {
           ...state,
           rootTask: api.addSubTask(state.currentTaskId, action.todoText, action.urgency, state.rootTask)
@@ -51,6 +47,16 @@ function reducer(state: AppState, action: Action): AppState {
         return {
           ...state,
           rootTask: api.toggleTodo(action.todoId, state.rootTask)
+        }
+      }
+      return state;
+    }
+    case 'SetCurrentTask': {
+      if (state.phase === 'loaded') {
+        return {
+          ...state,
+          currentTaskId: action.currentTaskId,
+          currentTask: action.currentTask
         }
       }
       return state;

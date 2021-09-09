@@ -1,24 +1,19 @@
 import { TaskModel } from "./model";
 
-let rootPointer: TaskModel | null = null;
-
-export const read = async () => {
+export const read = async (): Promise<TaskModel> => {
   const raw = localStorage.getItem('tasks');
   if (raw) {
-    rootPointer = JSON.parse(raw) as TaskModel;
-    return rootPointer;
+    return JSON.parse(raw) as TaskModel;
   }
-  rootPointer = {
+  return {
     id: 'root',
     title: 'root',
     urgency: 'doFirst',
     done: false,
     subTasks: [],
   };
-  return rootPointer;
 }
 
-export const persist = async () => {
-  if (rootPointer === null) return;
-  localStorage.setItem('tasks', JSON.stringify(rootPointer));
+export const persist = async (rootTask: TaskModel) => {
+  localStorage.setItem('tasks', JSON.stringify(rootTask));
 }
