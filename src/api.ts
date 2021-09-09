@@ -1,4 +1,3 @@
-import * as storage from './storage';
 import { GroupedTasks, TaskModel, UrgencyLevels } from './model';
 
 export const groupByUrgencyLevel = (head: TaskModel): GroupedTasks => {
