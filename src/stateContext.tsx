@@ -23,7 +23,6 @@ const init: AppState = {
 }
 
 function reducer(state: AppState, action: Action): AppState {
-  console.log(action);
   switch(action.kind) {
     case 'SetRootTask': {
       return {
