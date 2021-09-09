@@ -30,7 +30,7 @@ const Quadrant = (props: QuadrantProps) => {
     const val = inputVal.trim();
     if (val) {
       setInputVal('');
-      dispatch({ kind: 'AddTodo', todoText: val });
+      dispatch({ kind: 'AddTodo', todoText: val, urgency: urgencyLevel });
     }
   };
 

@@ -1,21 +1,16 @@
 import * as storage from './storage';
 import { GroupedTasks, TaskModel, UrgencyLevels } from './model';
 
-export type APIResponse = {currentTask: TaskModel, groupedTasks: GroupedTasks};
-
-const groupByUrgencyLevel = (head: TaskModel): APIResponse => {
+export const groupByUrgencyLevel = (head: TaskModel): GroupedTasks => {
   return {
-    currentTask: head,
-    groupedTasks: {
-      delegate: head.subTasks.filter(x => x.urgency === 'delegate'),
-      doFirst: head.subTasks.filter(x => x.urgency === 'doFirst'),
-      dontDo: head.subTasks.filter(x => x.urgency === 'dontDo'),
-      schedule: head.subTasks.filter(x => x.urgency === 'schedule'),
-    }
-  }
+    delegate: head.subTasks.filter(x => x.urgency === 'delegate'),
+    doFirst: head.subTasks.filter(x => x.urgency === 'doFirst'),
+    dontDo: head.subTasks.filter(x => x.urgency === 'dontDo'),
+    schedule: head.subTasks.filter(x => x.urgency === 'schedule'),
+  };
 }
 
-export const findTaskByIndex = (index: string, head: TaskModel): TaskModel | null => {
+export const findTaskById = (index: string, head: TaskModel): TaskModel | null => {
   let Q = [head];
   while(Q.length) {
     let top = Q.shift()!;
@@ -27,13 +22,18 @@ export const findTaskByIndex = (index: string, head: TaskModel): TaskModel | nul
   return null;
 }
 
-export const fetchTasksForParent = async (parent: string): Promise<APIResponse | null> => {
-  const task = findTaskByIndex(parent, await storage.read());
-  if (!task) return null;
-  return groupByUrgencyLevel(task);
+export const fetchRootTaskFromStorage = async (): Promise<TaskModel> => {
+  return storage.read();
 }
 
-export const addTask = async (parentTask: TaskModel, title: string, urgency: UrgencyLevels): Promise<void> => {
+export const addSubTask = (
+  currentTaskId: string,
+  title: string,
+  urgency: UrgencyLevels,
+  rootTask: TaskModel,
+): TaskModel => {
+  const parentTask = findTaskById(currentTaskId, rootTask);
+  if (!parentTask) return rootTask;
   parentTask.subTasks.push({
     id: String(Date.now()),
     title,
@@ -41,5 +41,12 @@ export const addTask = async (parentTask: TaskModel, title: string, urgency: Urg
     done: false,
     subTasks: [],
   });
-  storage.persist();
+  return rootTask;
+}
+
+export const toggleTodo = (taskId: string, rootTask: TaskModel): TaskModel => {
+  const task = findTaskById(taskId, rootTask);
+  if (!task) return rootTask;
+  task.done = !task.done;
+  return rootTask;
 }
