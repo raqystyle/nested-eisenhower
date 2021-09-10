@@ -7,6 +7,7 @@ import Quadrant as Q
 import Quadrant exposing (Msg(..))
 import Quadrant exposing (UrgencyLevels)
 
+main : Program () Model Msg
 main = Browser.sandbox
   { init = init
   , view = view
